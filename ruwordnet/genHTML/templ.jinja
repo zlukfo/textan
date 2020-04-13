@@ -1,0 +1,43 @@
+{% set ontology_url = 'http://lukfo.online/' %}
+{% set PoS = 'verb#' %}
+
+<!DOCTYPE html>
+<html
+ 	xmlns="http://www.w3.org/1999/xhtml"
+  	prefix="
+    owl: http://www.w3.org/2002/07/owl#
+    rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns#
+    skos: http://www.w3.org/2004/02/skos/core#
+    rdfs: http://www.w3.org/2000/01/rdf-schema#"		>
+<head>
+	<title>{{descriptor}}</title>
+</head>
+<body about="{{ontology_url}}{{PoS}}{{descriptor | replace(' ', '%20')}}" typeof="skos:Concept"> 
+	<div>
+		<span>Понятие: <b property="skos:notation" content="{{descriptor}}">"{{descriptor}}"</b></span>
+	</div>
+	<p><i>КОНТЕКСТЫ:</i></p>
+	{% for synset in synsets %}
+		<p style="margin-left: 50px;">
+			<span><b>Синсет:</span></span>
+			{% for d in synset.description %}
+	    		<span rel="skos:relation" resource="{{ontology_url}}{{PoS}}{{d | replace(' ', '%20')}}" content="{{d}}">
+	    			<a href="{{ontology_url}}{{PoS}}{{ d | replace(' ', '%20')}}">{{d}}</a>,
+	    		</span>
+	    	{% endfor %}
+    	</p>
+		<p style="margin-left: 100px;"><b>Oтношения:</b></p>
+		{% for rel in synset.relations %}
+			<p style="margin-left: 150px;">
+				<span><b>{{rel}}: </b></span>
+				{% for i in synset.relations[rel] %}
+		    		<span rel="skos:relation" resource="{{ontology_url}}{{PoS}}{{i | replace(' ', '%20')}}" content="{{i}}">
+	    			<a href="{{ontology_url}}{{PoS}}{{ i | replace(' ', '%20')}}">{{i}}</a>,
+		    		</span>		
+	    		{% endfor %}
+    		</p>
+    	{% endfor %}
+    {% endfor %} 
+
+</body>
+	</html>
